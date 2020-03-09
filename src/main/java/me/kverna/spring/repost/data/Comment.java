@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -20,4 +21,11 @@ public class Comment {
     private String content;
     private LocalDateTime created;
     private LocalDateTime edited;
+
+    @ManyToOne
+    private User author;
+    @ManyToOne
+    private Resub parent_resub;
+    @ManyToOne
+    private Post parent_post;
 }

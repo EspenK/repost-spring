@@ -4,12 +4,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Table(name = "resubs")
@@ -26,6 +28,9 @@ public class Resub {
     private LocalDateTime edited;
 
     @ManyToOne
-    @JoinColumn(name = "user_username")
     private User owner;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resub")
+    private Set<Post> posts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent_resub")
+    private Set<Comment> comments;
 }

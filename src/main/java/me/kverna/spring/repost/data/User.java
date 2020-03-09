@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -27,10 +28,10 @@ public class User {
 
     private String hashed_password;
 
-    @OneToMany(mappedBy = "resub")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<Resub> resubs;
-    @OneToMany(mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private Set<Post> posts;
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private Set<Comment> comments;
 }
