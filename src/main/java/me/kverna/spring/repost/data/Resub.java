@@ -21,9 +21,8 @@ public class Resub {
     @Id
     @GeneratedValue
     private int id;
-    private String title;
-    private String url;
-    private String content;
+    private String name;
+    private String description;
     private LocalDateTime created;
     private LocalDateTime edited;
 
