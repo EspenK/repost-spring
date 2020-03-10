@@ -41,7 +41,7 @@ public class Comment {
         return parent_resub.getName();
     }
 
-    @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "parent_post_id", access = JsonProperty.Access.READ_ONLY)
     public int getParentPostId() {
         return parent_post.getId();
     }

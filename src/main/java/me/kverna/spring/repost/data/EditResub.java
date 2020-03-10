@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EditResub {
     private String description;
-    @JsonIgnore
-    private String newOwnerUsername;
-
     @JsonProperty(value = "new_owner_username")
-    public void setOwnerUsername(String ownerUsername) {
-        newOwnerUsername = ownerUsername;
-    }
+    private String newOwnerUsername;
 }
