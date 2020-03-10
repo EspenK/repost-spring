@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ResubRepository extends JpaRepository<Resub, Integer> {
+    Resub findByName(String name);
+
+    void deleteByName(String name);
 }
