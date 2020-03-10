@@ -1,5 +1,7 @@
 package me.kverna.spring.repost.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,15 +25,25 @@ public class User {
     private String username;
     private String bio;
     private String avatar_url;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime created;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime edited;
 
+    @JsonIgnore
     private String hashed_password;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<Resub> resubs;
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private Set<Post> posts;
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private Set<Comment> comments;
 }
