@@ -37,7 +37,13 @@ public class ResubService {
      * @return the resub with the given name.
      */
     public Resub getResub(String name) {
-        return repository.findByName(name);
+        Resub resub = repository.findByName(name);
+        if (resub == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format("Resub %s was not found", name));
+        }
+
+        return resub;
     }
 
     /**
