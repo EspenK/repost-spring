@@ -1,5 +1,7 @@
 package me.kverna.spring.repost.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,17 +22,36 @@ import java.util.Set;
 public class Post {
     @Id
     @GeneratedValue
+    @JsonIgnore
     private int id;
     private String title;
     private String url;
     private String content;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime created;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime edited;
 
+    @JsonIgnore
     @ManyToOne
     private User author;
+
+    @JsonIgnore
     @ManyToOne
     private Resub resub;
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent_post")
     private Set<Comment> comments;
+
+    @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
+    public String getParentResubName() {
+        return resub.getName();
+    }
+
+    @JsonProperty(value = "author_username", access = JsonProperty.Access.READ_ONLY)
+    public String getAuthorUsername() {
+        return author.getUsername();
+    }
 }

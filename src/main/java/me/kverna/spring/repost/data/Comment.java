@@ -1,5 +1,7 @@
 package me.kverna.spring.repost.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +24,30 @@ public class Comment {
     private LocalDateTime created;
     private LocalDateTime edited;
 
+    @JsonIgnore
     @ManyToOne
     private User author;
+
+    @JsonIgnore
     @ManyToOne
     private Resub parent_resub;
+
+    @JsonIgnore
     @ManyToOne
     private Post parent_post;
+
+    @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
+    public String getParentResubName() {
+        return parent_resub.getName();
+    }
+
+    @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
+    public int getParentPostId() {
+        return parent_post.getId();
+    }
+
+    @JsonProperty(value = "author_username", access = JsonProperty.Access.READ_ONLY)
+    public String getAuthorUsername() {
+        return author.getUsername();
+    }
 }
