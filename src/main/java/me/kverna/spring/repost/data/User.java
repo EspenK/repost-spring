@@ -21,6 +21,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
+    @JsonIgnore
     private int id;
     private String username;
     private String bio;

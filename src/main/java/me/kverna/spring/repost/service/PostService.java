@@ -26,13 +26,23 @@ public class PostService {
     }
 
     /**
-     * Get all posts in a resub with the given name.
+     * Get all posts in a resub.
      *
      * @param resub the resub.
-     * @return a list of all posts in the resub with the given name.
+     * @return a list of all posts in the resub.
      */
     public List<Post> getAllPostsByParentResub(Resub resub) {
         return repository.findAllByParentResub(resub);
+    }
+
+    /**
+     * Get all posts by a user.
+     *
+     * @param author the user.
+     * @return a list of all posts by the user.
+     */
+    public List<Post> getAllPostsByAuthor(User author) {
+        return repository.findAllByAuthor(author);
     }
 
     /**
@@ -78,18 +88,8 @@ public class PostService {
      * @return the edited post.
      */
     public Post editPost(EditPost editPost, Post post) {
-        String content = editPost.getContent();
-        String url = editPost.getUrl();
-
-        System.out.println(editPost);
-
-        if (content != null) {
-            post.setContent(content);
-        }
-
-        if (url != null) {
-            post.setUrl(url);
-        }
+        post.setContent(editPost.getContent());
+        post.setUrl(editPost.getUrl());
 
         post.setEdited(LocalDateTime.now());
         return repository.save(post);

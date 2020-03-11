@@ -29,12 +29,14 @@ public class UserService {
      * @return the user with the given username.
      */
     public User getUser(String username) {
+        System.out.println(username);
         User user = repository.findByUsername(username);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     String.format("User %s was not found", username));
         }
 
+        System.out.println(user);
         return user;
     }
 
@@ -57,6 +59,7 @@ public class UserService {
         user.setAvatarUrl(createUser.getAvatarUrl());
         user.setHashedPassword(passwordEncoder.encode(createUser.getPassword()));
         user.setCreated(LocalDateTime.now());
+        System.out.println(user);
 
         return repository.save(user);
     }

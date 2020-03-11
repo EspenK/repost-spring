@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.CreateResub;
-import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
@@ -67,10 +66,7 @@ public class ResubController {
     })
     @PostMapping(value = "/", consumes = {"application/json"}, produces = {"application/json"})
     public Resub createResub(@RequestBody CreateResub createResub) {
-        CreateUser createUser = new CreateUser();
-        createUser.setUsername("aa");
-        createUser.setPassword("aa");
-        User owner = userService.createUser(createUser);
+        User owner = userService.getUser("aa");
         return service.createResub(createResub, owner);
     }
 

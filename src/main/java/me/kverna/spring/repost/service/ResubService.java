@@ -19,13 +19,11 @@ public class ResubService {
 
     private ResubRepository repository;
     private UserRepository userRepository;
-    private UserService userService;
 
     @Autowired
-    public ResubService(ResubRepository repository, UserRepository userRepository, UserService userService) {
+    public ResubService(ResubRepository repository, UserRepository userRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
-        this.userService = userService;
     }
 
     /**
@@ -72,6 +70,7 @@ public class ResubService {
         resub.setOwner(owner);
         resub.setCreated(LocalDateTime.now());
 
+        System.out.println(resub);
         return repository.save(resub);
     }
 
@@ -106,12 +105,12 @@ public class ResubService {
     }
 
     /**
-     * Get all resubs owned by a user with the given username.
+     * Get all resubs owned by a user.
      *
-     * @param username the username of the user.
-     * @return a list of all resubs owned by the user with the given username.
+     * @param owner the user.
+     * @return a list of all resubs owned by the user.
      */
-    public List<Resub> getAllResubsByOwnerUsername(String username) {
-        return repository.findAllByOwner(userService.getUser(username));
+    public List<Resub> getAllResubsByOwner(User owner) {
+        return repository.findAllByOwner(owner);
     }
 }

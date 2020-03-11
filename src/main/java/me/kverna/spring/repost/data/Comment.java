@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 public class Comment {
+    @JsonIgnore
     @Id
     @GeneratedValue
     private int id;
