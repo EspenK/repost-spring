@@ -1,5 +1,6 @@
 package me.kverna.spring.repost.service;
 
+import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -18,11 +19,13 @@ public class ResubService {
 
     private ResubRepository repository;
     private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public ResubService(ResubRepository repository, UserRepository userRepository) {
+    public ResubService(ResubRepository repository, UserRepository userRepository, UserService userService) {
         this.repository = repository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -53,19 +56,22 @@ public class ResubService {
     /**
      * Create a resub if no resub with the same name exists.
      *
-     * @param owner the owner of the resub.
-     * @param resub the resub to create.
+     * @param owner       the owner of the resub.
+     * @param createResub the resub to create.
      * @return the resub that is created.
      */
-    public Resub createResub(User owner, Resub resub) {
-        Resub existingResub = repository.findByName(resub.getName());
+    public Resub createResub(CreateResub createResub, User owner) {
+        Resub existingResub = repository.findByName(createResub.getName());
         if (existingResub != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("Resub %s already exists", resub.getName()));
+                    String.format("Resub %s already exists", createResub.getName()));
         }
-
+        Resub resub = new Resub();
+        resub.setName(createResub.getName());
+        resub.setDescription(createResub.getDescription());
         resub.setOwner(owner);
         resub.setCreated(LocalDateTime.now());
+
         return repository.save(resub);
     }
 
@@ -110,6 +116,6 @@ public class ResubService {
      * @return a list of all resubs owned by the user with the given username.
      */
     public List<Resub> getAllResubsByOwnerUsername(String username) {
-        return repository.findAllByOwnerUsername(username);
+        return repository.findAllByOwner(userService.getUser(username));
     }
 }

@@ -2,6 +2,7 @@ package me.kverna.spring.repost.controller;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -51,11 +52,11 @@ public class ResubController {
             @ApiResponse(responseCode = "404")
     })
     @PostMapping(value = "/", consumes = {"application/json"}, produces = {"application/json"})
-    public Resub createResub(@RequestBody Resub resub) {
+    public Resub createResub(@RequestBody CreateResub createResub) {
         User owner = new User();
         owner.setUsername("Kåre");
         owner.setBio("Er kul tbh");
-        return service.createResub(userRepository.save(owner), resub);
+        return service.createResub(createResub, userRepository.save(owner));
     }
 
     @ApiResponses(value = {

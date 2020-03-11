@@ -1,6 +1,8 @@
 package me.kverna.spring.repost.repository;
 
 import me.kverna.spring.repost.data.Post;
+import me.kverna.spring.repost.data.Resub;
+import me.kverna.spring.repost.data.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    List<Post> findAllByAuthorUsername(String username);
+    List<Post> findAllByAuthor(User author);
 
-    List<Post> findAllByParentResubName(String name);
+    List<Post> findAllByParentResub(Resub resub);
 }

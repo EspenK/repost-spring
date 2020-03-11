@@ -18,11 +18,13 @@ public class PostService {
 
     private PostRepository repository;
     private UserService userService;
+    private ResubService resubService;
 
     @Autowired
-    public PostService(PostRepository repository, UserService userService) {
+    public PostService(PostRepository repository, UserService userService, ResubService resubService) {
         this.repository = repository;
         this.userService = userService;
+        this.resubService = resubService;
     }
 
     /**
@@ -32,7 +34,7 @@ public class PostService {
      * @return a list of all posts in the resub with the given name.
      */
     public List<Post> getAllPostsByParentResubName(String name) {
-        return repository.findAllByParentResubName(name);
+        return repository.findAllByParentResub(resubService.getResub(name));
     }
 
     /**
