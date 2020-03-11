@@ -24,7 +24,9 @@ public class User {
     private int id;
     private String username;
     private String bio;
-    private String avatar_url;
+
+    @JsonProperty(value = "avatar_url")
+    private String avatarUrl;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime created;
