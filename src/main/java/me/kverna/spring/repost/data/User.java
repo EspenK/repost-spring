@@ -35,7 +35,7 @@ public class User {
     private LocalDateTime edited;
 
     @JsonIgnore
-    private String hashed_password;
+    private String hashedPassword;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
