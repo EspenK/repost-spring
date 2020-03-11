@@ -30,20 +30,20 @@ public class Comment {
 
     @JsonIgnore
     @ManyToOne
-    private Resub parent_resub;
+    private Resub parentResub;
 
     @JsonIgnore
     @ManyToOne
-    private Post parent_post;
+    private Post parentPost;
 
     @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
     public String getParentResubName() {
-        return parent_resub.getName();
+        return parentResub.getName();
     }
 
     @JsonProperty(value = "parent_post_id", access = JsonProperty.Access.READ_ONLY)
     public int getParentPostId() {
-        return parent_post.getId();
+        return parentPost.getId();
     }
 
     @JsonProperty(value = "author_username", access = JsonProperty.Access.READ_ONLY)

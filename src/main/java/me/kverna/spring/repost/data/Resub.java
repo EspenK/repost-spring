@@ -38,11 +38,11 @@ public class Resub {
     private User owner;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resub")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentResub")
     private Set<Post> posts;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent_resub")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentResub")
     private Set<Comment> comments;
 
     @JsonProperty(value = "owner_username", access = JsonProperty.Access.READ_ONLY)

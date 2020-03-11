@@ -39,15 +39,15 @@ public class Post {
 
     @JsonIgnore
     @ManyToOne
-    private Resub resub;
+    private Resub parentResub;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent_post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPost")
     private Set<Comment> comments;
 
     @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
     public String getParentResubName() {
-        return resub.getName();
+        return parentResub.getName();
     }
 
     @JsonProperty(value = "author_username", access = JsonProperty.Access.READ_ONLY)
