@@ -65,12 +65,10 @@ public class UserService {
      * Edit the user with the given username.
      *
      * @param editUser the edited user fields.
-     * @param username the username of the user to edit.
+     * @param user     the user to edit.
      * @return the edited user.
      */
-    public User editUser(EditUser editUser, String username) {
-        User user = getUser(username);
-
+    public User editUser(EditUser editUser, User user) {
         String bio = editUser.getBio();
         String avatarUrl = editUser.getAvatarUrl();
 

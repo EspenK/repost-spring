@@ -56,7 +56,7 @@ public class ResubService {
     /**
      * Create a resub if no resub with the same name exists.
      *
-     * @param owner       the owner of the resub.
+     * @param owner       the user to be owner of the resub.
      * @param createResub the resub to create.
      * @return the resub that is created.
      */
@@ -79,23 +79,18 @@ public class ResubService {
      * Edit a resub by name.
      *
      * @param editResub the new resub fields.
-     * @param resubName the name of the resub to edit.
+     * @param resub     the resub to edit.
      * @return the edited resub.
      */
-    public Resub editResub(EditResub editResub, String resubName) {
-        Resub resub = getResub(resubName);
-
+    public Resub editResub(EditResub editResub, Resub resub) {
         String newOwnerUsername = editResub.getNewOwnerUsername();
-        String description = editResub.getDescription();
-        if (description != null) {
-            resub.setDescription(description);
-        }
-
         if (newOwnerUsername != null) {
             User newOwner = new User();
             newOwner.setUsername(newOwnerUsername);
             resub.setOwner(userRepository.save(newOwner));
         }
+
+        resub.setDescription(editResub.getDescription());
         resub.setEdited(LocalDateTime.now());
         return repository.save(resub);
     }

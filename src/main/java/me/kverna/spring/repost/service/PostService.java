@@ -1,7 +1,9 @@
 package me.kverna.spring.repost.service;
 
+import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.EditPost;
 import me.kverna.spring.repost.data.Post;
+import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +19,20 @@ import java.util.Optional;
 public class PostService {
 
     private PostRepository repository;
-    private UserService userService;
-    private ResubService resubService;
 
     @Autowired
-    public PostService(PostRepository repository, UserService userService, ResubService resubService) {
+    public PostService(PostRepository repository) {
         this.repository = repository;
-        this.userService = userService;
-        this.resubService = resubService;
     }
 
     /**
      * Get all posts in a resub with the given name.
      *
-     * @param name the name of the resub.
+     * @param resub the resub.
      * @return a list of all posts in the resub with the given name.
      */
-    public List<Post> getAllPostsByParentResubName(String name) {
-        return repository.findAllByParentResub(resubService.getResub(name));
+    public List<Post> getAllPostsByParentResub(Resub resub) {
+        return repository.findAllByParentResub(resub);
     }
 
     /**
@@ -56,12 +54,16 @@ public class PostService {
     /**
      * Create a new post with the user with the given username as the author.
      *
-     * @param post     the post to create.
-     * @param username the username of the user to be set as author.
+     * @param createPost the post to create.
+     * @param author     the user to be set as author.
      * @return the post that is created.
      */
-    public Post createPost(Post post, String username) {
-        User author = userService.getUser(username);
+    public Post createPost(CreatePost createPost, Resub resub, User author) {
+        Post post = new Post();
+        post.setParentResub(resub);
+        post.setTitle(createPost.getTitle());
+        post.setContent(createPost.getContent());
+        post.setUrl(createPost.getUrl());
         post.setAuthor(author);
         post.setCreated(LocalDateTime.now());
 
@@ -69,15 +71,13 @@ public class PostService {
     }
 
     /**
-     * Edit the post with the given id.
+     * Edit the post.
      *
      * @param editPost the new post fields.
-     * @param postId   the id of the post.
+     * @param post     the post to edit.
      * @return the edited post.
      */
-    public Post editPost(EditPost editPost, int postId) {
-        Post post = getPost(postId);
-
+    public Post editPost(EditPost editPost, Post post) {
         String content = editPost.getContent();
         String url = editPost.getUrl();
 
