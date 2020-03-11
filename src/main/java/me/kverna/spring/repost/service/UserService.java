@@ -92,6 +92,7 @@ public class UserService {
      * @param username the username of the user to delete.
      */
     public void deleteUser(String username) {
-        repository.deleteByUsername(username);
+        User user = getUser(username);
+        repository.delete(user);
     }
 }

@@ -12,6 +12,4 @@ public interface ResubRepository extends JpaRepository<Resub, Integer> {
     Resub findByName(String name);
 
     List<Resub> findAllByOwner(User owner);
-
-    void deleteByName(String name);
 }

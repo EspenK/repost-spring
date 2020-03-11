@@ -96,6 +96,7 @@ public class PostService {
     }
 
     public void deletePost(int postId) {
-        repository.deleteById(postId);
+        Post post = getPost(postId);
+        repository.delete(post);
     }
 }

@@ -106,7 +106,8 @@ public class ResubService {
      * @param name the name of the resub to delete.
      */
     public void deleteResub(String name) {
-        repository.deleteByName(name);
+        Resub resub = getResub(name);
+        repository.delete(resub);
     }
 
     /**
