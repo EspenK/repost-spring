@@ -77,25 +77,21 @@ public class ResubService {
      * @return the edited resub.
      */
     public Resub editResub(EditResub editResub, String resubName) {
-        Resub existingResub = repository.findByName(resubName);
-        if (existingResub == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Resub %s was not found", resubName));
-        }
+        Resub resub = getResub(resubName);
 
         String newOwnerUsername = editResub.getNewOwnerUsername();
         String description = editResub.getDescription();
         if (description != null) {
-            existingResub.setDescription(description);
+            resub.setDescription(description);
         }
 
         if (newOwnerUsername != null) {
             User newOwner = new User();
             newOwner.setUsername(newOwnerUsername);
-            existingResub.setOwner(userRepository.save(newOwner));
+            resub.setOwner(userRepository.save(newOwner));
         }
-        existingResub.setEdited(LocalDateTime.now());
-        return repository.save(existingResub);
+        resub.setEdited(LocalDateTime.now());
+        return repository.save(resub);
     }
 
     /**
@@ -105,5 +101,15 @@ public class ResubService {
      */
     public void deleteResub(String name) {
         repository.deleteByName(name);
+    }
+
+    /**
+     * Get all resubs owned by a user with the given username.
+     *
+     * @param username the username of the user.
+     * @return a list of all resubs owned by the user with the given username.
+     */
+    public List<Resub> getAllResubsByOwnerUsername(String username) {
+        return repository.findAllByOwnerUsername(username);
     }
 }
