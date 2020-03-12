@@ -5,13 +5,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.security.Principal;
 import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.security.AuthorizeUser;
-import me.kverna.spring.repost.security.AuthorizedUser;
+import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
@@ -59,7 +58,7 @@ public class UserController {
     )
     @AuthorizeUser
     @GetMapping(value = "/me")
-    public User getCurrentUser(@AuthorizedUser User currentUser) {
+    public User getCurrentUser(@CurrentUser User currentUser) {
         return currentUser;
     }
 

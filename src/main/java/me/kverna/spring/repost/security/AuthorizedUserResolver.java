@@ -4,6 +4,8 @@ import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
+
     private UserService userService;
 
     @Autowired
@@ -22,12 +25,18 @@ public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().equals(User.class) && methodParameter.getParameterAnnotation(AuthorizedUser.class) != null;
+        return methodParameter.getParameterType().equals(User.class) && methodParameter.getParameterAnnotation(CurrentUser.class) != null;
     }
 
     @Override
     public User resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.getUser(username);
+        // Return null when the current user is anonymous (not authenticated)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
+        System.out.println(authentication);
+        return userService.getUser(authentication.getName());
     }
 }
