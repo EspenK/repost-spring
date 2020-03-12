@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
         bearerFormat = "jwt",
         flows = @OAuthFlows(
                 password = @OAuthFlow(
-                        tokenUrl = "/oauth/token",
+                        tokenUrl = "/api/auth/token",
                         scopes = {
                                 @OAuthScope(name = "user", description = "User access")
                         }

@@ -1,4 +1,4 @@
-package me.kverna.spring.repost.config;
+package me.kverna.spring.repost.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +29,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
+                .pathMapping("/oauth/token", "/api/auth/token")
                 .tokenStore(new JwtTokenStore(jwtAccessTokenConverter))
                 .authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter);

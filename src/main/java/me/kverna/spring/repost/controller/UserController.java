@@ -10,11 +10,11 @@ import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.AuthorizeUser;
+import me.kverna.spring.repost.security.AuthorizedUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,10 +57,10 @@ public class UserController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
-    @PreAuthorize("isAuthenticated()")
+    @AuthorizeUser
     @GetMapping(value = "/me")
-    public User getCurrentUser(Principal principal) {
-        return service.getUser(principal.getName());
+    public User getCurrentUser(@AuthorizedUser User currentUser) {
+        return currentUser;
     }
 
     @Operation(summary = "Get User", description = "Get a specific user.")
