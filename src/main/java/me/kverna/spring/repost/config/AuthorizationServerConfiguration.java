@@ -39,6 +39,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         clients
                 .inMemory()
                 .withClient("client")
-                .authorizedGrantTypes("password");
+                .secret(passwordEncoder.encode("secret"))
+                .authorizedGrantTypes("password")
+                .scopes("user");
     }
 }

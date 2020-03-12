@@ -1,5 +1,7 @@
 package me.kverna.spring.repost.config;
 
+import java.util.Optional;
+import me.kverna.spring.repost.repository.UserRepository;
 import me.kverna.spring.repost.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,19 +20,24 @@ import java.util.Set;
 @Transactional
 public class RepostUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final Set<GrantedAuthority> defaultAuthorities;
 
     @Autowired
-    public RepostUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public RepostUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.defaultAuthorities = new HashSet<>();
         this.defaultAuthorities.add(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        me.kverna.spring.repost.data.User user = userService.getUser(username);
+        me.kverna.spring.repost.data.User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + username + " not found");
+        }
+
+        System.out.println("Loaded " + username);
         return new User(user.getUsername(), user.getHashedPassword(), defaultAuthorities);
     }
 }
