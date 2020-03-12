@@ -11,6 +11,7 @@ import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping(value = "/{username}", produces = {"application/json"})
+    @PreAuthorize("hasRole('USER')")
     public User getUser(@PathVariable String username) {
         return service.getUser(username);
     }
