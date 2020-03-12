@@ -21,10 +21,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
+    @JsonIgnore
     private int id;
     private String username;
     private String bio;
-    private String avatar_url;
+
+    @JsonProperty(value = "avatar_url")
+    private String avatarUrl;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime created;
@@ -33,7 +36,7 @@ public class User {
     private LocalDateTime edited;
 
     @JsonIgnore
-    private String hashed_password;
+    private String hashedPassword;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")

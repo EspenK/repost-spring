@@ -1,5 +1,6 @@
 package me.kverna.spring.repost.service;
 
+import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -53,19 +54,23 @@ public class ResubService {
     /**
      * Create a resub if no resub with the same name exists.
      *
-     * @param owner the owner of the resub.
-     * @param resub the resub to create.
+     * @param owner       the user to be owner of the resub.
+     * @param createResub the resub to create.
      * @return the resub that is created.
      */
-    public Resub createResub(User owner, Resub resub) {
-        Resub existingResub = repository.findByName(resub.getName());
+    public Resub createResub(CreateResub createResub, User owner) {
+        Resub existingResub = repository.findByName(createResub.getName());
         if (existingResub != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("Resub %s already exists", resub.getName()));
+                    String.format("Resub %s already exists", createResub.getName()));
         }
-
+        Resub resub = new Resub();
+        resub.setName(createResub.getName());
+        resub.setDescription(createResub.getDescription());
         resub.setOwner(owner);
         resub.setCreated(LocalDateTime.now());
+
+        System.out.println(resub);
         return repository.save(resub);
     }
 
@@ -73,29 +78,20 @@ public class ResubService {
      * Edit a resub by name.
      *
      * @param editResub the new resub fields.
-     * @param resubName the name of the resub to edit.
+     * @param resub     the resub to edit.
      * @return the edited resub.
      */
-    public Resub editResub(EditResub editResub, String resubName) {
-        Resub existingResub = repository.findByName(resubName);
-        if (existingResub == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Resub %s was not found", resubName));
-        }
-
+    public Resub editResub(EditResub editResub, Resub resub) {
         String newOwnerUsername = editResub.getNewOwnerUsername();
-        String description = editResub.getDescription();
-        if (description != null) {
-            existingResub.setDescription(description);
-        }
-
         if (newOwnerUsername != null) {
             User newOwner = new User();
             newOwner.setUsername(newOwnerUsername);
-            existingResub.setOwner(userRepository.save(newOwner));
+            resub.setOwner(userRepository.save(newOwner));
         }
-        existingResub.setEdited(LocalDateTime.now());
-        return repository.save(existingResub);
+
+        resub.setDescription(editResub.getDescription());
+        resub.setEdited(LocalDateTime.now());
+        return repository.save(resub);
     }
 
     /**
@@ -104,6 +100,17 @@ public class ResubService {
      * @param name the name of the resub to delete.
      */
     public void deleteResub(String name) {
-        repository.deleteByName(name);
+        Resub resub = getResub(name);
+        repository.delete(resub);
+    }
+
+    /**
+     * Get all resubs owned by a user.
+     *
+     * @param owner the user.
+     * @return a list of all resubs owned by the user.
+     */
+    public List<Resub> getAllResubsByOwner(User owner) {
+        return repository.findAllByOwner(owner);
     }
 }
