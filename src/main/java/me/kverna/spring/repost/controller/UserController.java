@@ -3,11 +3,14 @@ package me.kverna.spring.repost.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.AuthorizeUser;
+import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
@@ -42,6 +45,21 @@ public class UserController {
     @PostMapping(value = "/", consumes = {"application/json"}, produces = {"application/json"})
     public User createUser(@RequestBody CreateUser createUser) {
         return service.createUser(createUser);
+    }
+
+    @Operation(
+            summary = "Get Current User", description = "Get the authorized user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    @AuthorizeUser
+    @GetMapping(value = "/me")
+    public User getCurrentUser(@CurrentUser User currentUser) {
+        return currentUser;
     }
 
     @Operation(summary = "Get User", description = "Get a specific user.")
