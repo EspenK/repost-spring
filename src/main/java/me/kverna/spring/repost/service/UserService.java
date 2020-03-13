@@ -55,8 +55,6 @@ public class UserService {
 
         User user = new User();
         user.setUsername(createUser.getUsername());
-        user.setBio(createUser.getBio());
-        user.setAvatarUrl(createUser.getAvatarUrl());
         user.setHashedPassword(passwordEncoder.encode(createUser.getPassword()));
         user.setCreated(LocalDateTime.now());
         System.out.println(user);
