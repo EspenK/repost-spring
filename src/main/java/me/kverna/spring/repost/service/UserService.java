@@ -36,7 +36,6 @@ public class UserService {
                     String.format("User %s was not found", username));
         }
 
-        System.out.println(user);
         return user;
     }
 
@@ -57,7 +56,6 @@ public class UserService {
         user.setUsername(createUser.getUsername());
         user.setHashedPassword(passwordEncoder.encode(createUser.getPassword()));
         user.setCreated(LocalDateTime.now());
-        System.out.println(user);
 
         return repository.save(user);
     }
