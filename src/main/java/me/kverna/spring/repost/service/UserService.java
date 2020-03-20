@@ -70,28 +70,19 @@ public class UserService {
      * @return the edited user.
      */
     public User editUser(EditUser editUser, User user) {
-        String bio = editUser.getBio();
-        String avatarUrl = editUser.getAvatarUrl();
-
-        if (bio != null) {
-            user.setBio(bio);
-        }
-
-        if (avatarUrl != null) {
-            user.setAvatarUrl(avatarUrl);
-        }
+        user.setBio(editUser.getBio());
+        user.setAvatarUrl(editUser.getAvatarUrl());
 
         user.setEdited(LocalDateTime.now());
         return repository.save(user);
     }
 
     /**
-     * Delete a user by username.
+     * Delete a user.
      *
-     * @param username the username of the user to delete.
+     * @param user the user to delete.
      */
-    public void deleteUser(String username) {
-        User user = getUser(username);
+    public void deleteUser(User user) {
         repository.delete(user);
     }
 }

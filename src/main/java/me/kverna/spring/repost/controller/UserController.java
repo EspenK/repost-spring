@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.CreateUser;
+import me.kverna.spring.repost.data.EditUser;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -62,6 +63,32 @@ public class UserController {
         return currentUser;
     }
 
+    @Operation(
+            summary = "Edit Current User", description = "Edit the currently authorized user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    public User editCurrentUser(EditUser editUser, @CurrentUser User currentUser) {
+        return service.editUser(editUser, currentUser);
+    }
+
+    @Operation(
+            summary = "Delete Current User", description = "Delete the currently authorized user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    public void deleteCurrentUser(@CurrentUser User currentUser) {
+        service.deleteUser(currentUser);
+    }
+
     @Operation(summary = "Get User", description = "Get a specific user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Response"),
@@ -93,4 +120,15 @@ public class UserController {
         User author = service.getUser(username);
         return postService.getAllPostsByAuthor(author);
     }
+
+    /*@Operation(summary = "Get Comments Owned By User", description = "Get all comments owned by specific user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful Response"),
+            @ApiResponse(responseCode = "404", description = "Not Found")
+    })
+    @GetMapping(value = "/{username}/comments", produces = {"application/json"})
+    public List<Comment> getCommentsByUser(@PathVariable String username) {
+        User author = service.getUser(username);
+        return commentService.getAllCommentsByAuthor(author);
+    }*/
 }
