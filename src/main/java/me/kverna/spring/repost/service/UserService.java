@@ -29,7 +29,6 @@ public class UserService {
      * @return the user with the given username.
      */
     public User getUser(String username) {
-        System.out.println(username);
         User user = repository.findByUsername(username);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -61,7 +60,7 @@ public class UserService {
     }
 
     /**
-     * Edit the user with the given username.
+     * Edit the user.
      *
      * @param editUser the edited user fields.
      * @param user     the user to edit.

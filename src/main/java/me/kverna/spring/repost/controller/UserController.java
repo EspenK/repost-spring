@@ -15,7 +15,9 @@ import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +60,7 @@ public class UserController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @AuthorizeUser
-    @GetMapping(value = "/me")
+    @GetMapping(value = "/me", produces = {"application/json"})
     public User getCurrentUser(@CurrentUser User currentUser) {
         return currentUser;
     }
@@ -72,7 +74,8 @@ public class UserController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
-    public User editCurrentUser(EditUser editUser, @CurrentUser User currentUser) {
+    @PatchMapping(value = "/me", consumes = {"application/patch+json"}, produces = {"application/json"})
+    public User editCurrentUser(@RequestBody EditUser editUser, @CurrentUser User currentUser) {
         return service.editUser(editUser, currentUser);
     }
 
@@ -85,6 +88,7 @@ public class UserController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @DeleteMapping(value = "/me", produces = {"application/json"})
     public void deleteCurrentUser(@CurrentUser User currentUser) {
         service.deleteUser(currentUser);
     }
