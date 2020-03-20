@@ -46,9 +46,9 @@ public class CommentService {
      * Create a new comment in the given resub and post with the given user as the author.
      *
      * @param createComment the comment to create.
-     * @param post          the post the comment belongs to.
-     * @param resub         the resub the comment belongs to.
-     * @param author        the user to be set as author.
+     * @param post the post the comment belongs to.
+     * @param resub the resub the comment belongs to.
+     * @param author the user to be set as author.
      * @return the comment that is created.
      */
     public Comment createComment(CreateComment createComment, Post post, Resub resub, User author) {
@@ -66,12 +66,12 @@ public class CommentService {
      * Edit the comment.
      *
      * @param editComment the new comment fields.
-     * @param comment     the comment to edit.
-     * @param user        the user that performs the edit.
+     * @param comment the comment to edit.
+     * @param user the user that performs the edit.
      * @return the edited comment.
      */
     public Comment editComment(EditComment editComment, Comment comment, User user) {
-        if (comment.getAuthor() != user) {
+        if (!comment.isAuthor(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "You are not the author of this comment");
         }
@@ -86,10 +86,10 @@ public class CommentService {
      * Delete the comment.
      *
      * @param comment the comment to delete.
-     * @param user    the user that performs the delete.
+     * @param user the user that performs the delete.
      */
     public void deleteComment(Comment comment, User user) {
-        if (comment.getAuthor() != user) {
+        if (!comment.isUserAllowedToDelete(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "You are not the author of this comment");
         }

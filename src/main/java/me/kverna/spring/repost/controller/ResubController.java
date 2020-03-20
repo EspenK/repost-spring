@@ -10,6 +10,7 @@ import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
 import me.kverna.spring.repost.service.UserService;
@@ -80,8 +81,8 @@ public class ResubController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @DeleteMapping(value = "/{resub}")
-    public void deleteResub(@PathVariable String resub) {
-        service.deleteResub(resub);
+    public void deleteResub(@PathVariable String resub, @CurrentUser User user) {
+        service.deleteResub(service.getResub(resub), user);
     }
 
     @Operation(summary = "Edit Resub", description = "Edit a resub." +
@@ -94,8 +95,8 @@ public class ResubController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @PatchMapping(value = "/{resub}", consumes = {"application/patch+json"}, produces = {"application/json"})
-    public Resub editResub(@RequestBody EditResub editResub, @PathVariable String resub) {
-        return service.editResub(editResub, service.getResub(resub));
+    public Resub editResub(@RequestBody EditResub editResub, @PathVariable String resub, @CurrentUser User user) {
+        return service.editResub(editResub, service.getResub(resub), user);
     }
 
     @Operation(summary = "Create Post In Resub", description = "Create new post in a resub.")

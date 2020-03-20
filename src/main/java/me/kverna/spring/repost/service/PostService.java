@@ -85,9 +85,15 @@ public class PostService {
      *
      * @param editPost the new post fields.
      * @param post     the post to edit.
+     * @param user the user that performs the edit.
      * @return the edited post.
      */
-    public Post editPost(EditPost editPost, Post post) {
+    public Post editPost(EditPost editPost, Post post, User user) {
+        if (!post.isAuthor(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not the author of this post.");
+        }
+
         post.setContent(editPost.getContent());
         post.setUrl(editPost.getUrl());
 
@@ -95,8 +101,18 @@ public class PostService {
         return repository.save(post);
     }
 
-    public void deletePost(int postId) {
-        Post post = getPost(postId);
+    /**
+     * Delete the post if the user is the author of the post of the owner of the resub.
+     *
+     * @param post the post to delete.
+     * @param user the user that performs the delete.
+     */
+    public void deletePost(Post post, User user) {
+        if (!post.isUserAllowedToDelete(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not the author of the post");
+        }
+
         repository.delete(post);
     }
 }
