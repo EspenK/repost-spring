@@ -10,6 +10,7 @@ import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.AuthorizeUser;
 import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
@@ -72,6 +73,7 @@ public class ResubController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @ResponseStatus(HttpStatus.CREATED)
+    @AuthorizeUser
     @PostMapping(value = "/", consumes = {"application/json"}, produces = {"application/json"})
     public Resub createResub(@RequestBody CreateResub createResub, @CurrentUser User user) {
         return service.createResub(createResub, user);
@@ -89,6 +91,7 @@ public class ResubController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @AuthorizeUser
     @DeleteMapping(value = "/{resub}")
     public void deleteResub(@PathVariable String resub, @CurrentUser User user) {
         service.deleteResub(service.getResub(resub), user);
@@ -106,6 +109,7 @@ public class ResubController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @AuthorizeUser
     @PatchMapping(value = "/{resub}", consumes = {"application/patch+json"}, produces = {"application/json"})
     public Resub editResub(@PathVariable String resub, @RequestBody EditResub editResub, @CurrentUser User user) {
         return service.editResub(editResub, service.getResub(resub), user);
@@ -120,6 +124,7 @@ public class ResubController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @ResponseStatus(HttpStatus.CREATED)
+    @AuthorizeUser
     @PostMapping(value = "/{resub}/posts", produces = {"application/json"}, consumes = {"application/json"})
     public Post createPostInResub(@PathVariable String resub, @RequestBody CreatePost createPost, @CurrentUser User user) {
         return postService.createPost(createPost, service.getResub(resub), user);

@@ -9,6 +9,7 @@ import me.kverna.spring.repost.data.CreateComment;
 import me.kverna.spring.repost.data.EditPost;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.AuthorizeUser;
 import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.CommentService;
 import me.kverna.spring.repost.service.PostService;
@@ -61,6 +62,7 @@ public class PostController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @AuthorizeUser
     @PatchMapping(value = "/{postId}", consumes = {"application/patch+json"}, produces = {"application/json"})
     public Post editPost(@PathVariable int postId, @RequestBody EditPost editPost, @CurrentUser User user) {
         return service.editPost(editPost, service.getPost(postId), user);
@@ -79,6 +81,7 @@ public class PostController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
 
     )
+    @AuthorizeUser
     @DeleteMapping("/")
     public void deletePost(@PathVariable int postId, @CurrentUser User user) {
         service.deletePost(service.getPost(postId), user);
@@ -95,6 +98,7 @@ public class PostController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @ResponseStatus(HttpStatus.CREATED)
+    @AuthorizeUser
     @PostMapping(value = "/{postId}/comments")
     public Comment createComment(@PathVariable int postId, @RequestBody CreateComment createComment, @CurrentUser User user) {
         Post post = service.getPost(postId);

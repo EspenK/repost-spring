@@ -82,6 +82,7 @@ public class UserController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @AuthorizeUser
     @PatchMapping(value = "/me", consumes = {"application/patch+json"}, produces = {"application/json"})
     public User editCurrentUser(@RequestBody EditUser editUser, @CurrentUser User currentUser) {
         return service.editUser(editUser, currentUser);
@@ -96,6 +97,7 @@ public class UserController {
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
+    @AuthorizeUser
     @DeleteMapping(value = "/me", produces = {"application/json"})
     public void deleteCurrentUser(@CurrentUser User currentUser) {
         service.deleteUser(currentUser);
