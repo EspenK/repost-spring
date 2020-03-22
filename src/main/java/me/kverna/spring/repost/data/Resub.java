@@ -49,4 +49,25 @@ public class Resub {
     public String getOwnerUsername() {
         return owner.getUsername();
     }
+
+    /**
+     * The user is only allowed to delete a resub if they are
+     * the owner of the resub.
+     *
+     * @param user the user to check.
+     * @return true if the user is allowed to delete the resub.
+     */
+    public boolean isUserAllowedToDelete(User user) {
+        return owner == user;
+    }
+
+    /**
+     * Check if the user is the owner of the resub.
+     *
+     * @param user the user to check.
+     * @return true if the user is the owner of the resub.
+     */
+    public boolean isOwner(User user) {
+        return owner == user;
+    }
 }

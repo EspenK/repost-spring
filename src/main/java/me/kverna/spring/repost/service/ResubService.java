@@ -79,9 +79,15 @@ public class ResubService {
      *
      * @param editResub the new resub fields.
      * @param resub     the resub to edit.
+     * @param user the user that performs the edit.
      * @return the edited resub.
      */
-    public Resub editResub(EditResub editResub, Resub resub) {
+    public Resub editResub(EditResub editResub, Resub resub, User user) {
+        if (!resub.isOwner(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not the owner of the resub");
+        }
+
         String newOwnerUsername = editResub.getNewOwnerUsername();
         if (newOwnerUsername != null) {
             User newOwner = new User();
@@ -97,10 +103,14 @@ public class ResubService {
     /**
      * Delete a resub by name.
      *
-     * @param name the name of the resub to delete.
+     * @param resub the resub to delete.
+     * @param user the user that performs the delete.
      */
-    public void deleteResub(String name) {
-        Resub resub = getResub(name);
+    public void deleteResub(Resub resub, User user) {
+        if (!resub.isUserAllowedToDelete(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not the owner of the resub");
+        }
         repository.delete(resub);
     }
 

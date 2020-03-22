@@ -54,4 +54,25 @@ public class Post {
     public String getAuthorUsername() {
         return author.getUsername();
     }
+
+    /**
+     * The user is only allowed to delete a post if they are
+     * the author of the post or the owner of the resub.
+     *
+     * @param user the user to check.
+     * @return true if the user is allowed to delete the post.
+     */
+    public boolean isUserAllowedToDelete(User user) {
+        return parentResub.getOwner() == user || author == user;
+    }
+
+    /**
+     * Check if the user is the author of the post.
+     *
+     * @param user the user to check.
+     * @return true if the user is the author of the post.
+     */
+    public boolean isAuthor(User user) {
+        return author == user;
+    }
 }
