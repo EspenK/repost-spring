@@ -76,7 +76,9 @@ public class CommentService {
                     "You are not the author of this comment");
         }
 
-        comment.setContent(editComment.getContent());
+        if (editComment.getContent() != null) {
+            comment.setContent(editComment.getContent());
+        }
         comment.setEdited(LocalDateTime.now());
 
         return repository.save(comment);
