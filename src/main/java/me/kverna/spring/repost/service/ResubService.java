@@ -70,7 +70,6 @@ public class ResubService {
         resub.setOwner(owner);
         resub.setCreated(LocalDateTime.now());
 
-        System.out.println(resub);
         return repository.save(resub);
     }
 
