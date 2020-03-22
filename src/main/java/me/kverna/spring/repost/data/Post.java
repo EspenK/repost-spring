@@ -22,7 +22,6 @@ import java.util.Set;
 public class Post {
     @Id
     @GeneratedValue
-    @JsonIgnore
     private int id;
     private String title;
     private String url;
