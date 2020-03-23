@@ -67,8 +67,12 @@ public class UserService {
      * @return the edited user.
      */
     public User editUser(EditUser editUser, User user) {
-        user.setBio(editUser.getBio());
-        user.setAvatarUrl(editUser.getAvatarUrl());
+        if (editUser.getBio() != null) {
+            user.setBio(editUser.getBio().isEmpty() ? null : editUser.getBio().get());
+        }
+        if (editUser.getAvatarUrl() != null) {
+            user.setAvatarUrl(editUser.getAvatarUrl().isEmpty() ? null : editUser.getAvatarUrl().get());
+        }
 
         user.setEdited(LocalDateTime.now());
         return repository.save(user);

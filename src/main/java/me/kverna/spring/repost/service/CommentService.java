@@ -76,7 +76,9 @@ public class CommentService {
                     "You are not the author of this comment");
         }
 
-        comment.setContent(editComment.getContent());
+        if (editComment.getContent() != null) {
+            comment.setContent(editComment.getContent());
+        }
         comment.setEdited(LocalDateTime.now());
 
         return repository.save(comment);
@@ -113,7 +115,7 @@ public class CommentService {
      * @param author the user.
      * @return a list of all comments by the user.
      */
-    public List<Comment> findAllCommentsByAuthor(User author) {
+    public List<Comment> getAllCommentsByAuthor(User author) {
         return repository.findAllByAuthor(author);
     }
 
@@ -123,7 +125,7 @@ public class CommentService {
      * @param resub the resub.
      * @return a list of comments in the resub.
      */
-    public List<Comment> findAllCommentsByResub(Resub resub) {
+    public List<Comment> getAllCommentsByResub(Resub resub) {
         return repository.findAllByParentResub(resub);
     }
 }

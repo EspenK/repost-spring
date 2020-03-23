@@ -94,8 +94,15 @@ public class PostService {
                     "You are not the author of this post.");
         }
 
-        post.setContent(editPost.getContent());
-        post.setUrl(editPost.getUrl());
+        if (editPost.getTitle() != null) {
+            post.setTitle(editPost.getTitle());
+        }
+        if (editPost.getContent() != null) {
+            post.setContent(editPost.getContent().isEmpty() ? null : editPost.getContent().get());
+        }
+        if (editPost.getUrl() != null) {
+            post.setUrl(editPost.getUrl().isEmpty() ? null : editPost.getUrl().get());
+        }
 
         post.setEdited(LocalDateTime.now());
         return repository.save(post);

@@ -1,29 +1,27 @@
 package me.kverna.spring.repost.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.ResubRepository;
-import me.kverna.spring.repost.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 public class ResubService {
 
     private ResubRepository repository;
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public ResubService(ResubRepository repository, UserRepository userRepository) {
+    public ResubService(ResubRepository repository, UserService userService) {
         this.repository = repository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -54,7 +52,7 @@ public class ResubService {
     /**
      * Create a resub if no resub with the same name exists.
      *
-     * @param owner       the user to be owner of the resub.
+     * @param owner the user to be owner of the resub.
      * @param createResub the resub to create.
      * @return the resub that is created.
      */
@@ -70,7 +68,6 @@ public class ResubService {
         resub.setOwner(owner);
         resub.setCreated(LocalDateTime.now());
 
-        System.out.println(resub);
         return repository.save(resub);
     }
 
@@ -78,7 +75,7 @@ public class ResubService {
      * Edit a resub by name.
      *
      * @param editResub the new resub fields.
-     * @param resub     the resub to edit.
+     * @param resub the resub to edit.
      * @param user the user that performs the edit.
      * @return the edited resub.
      */
@@ -90,12 +87,15 @@ public class ResubService {
 
         String newOwnerUsername = editResub.getNewOwnerUsername();
         if (newOwnerUsername != null) {
-            User newOwner = new User();
-            newOwner.setUsername(newOwnerUsername);
-            resub.setOwner(userRepository.save(newOwner));
+            User newOwner = userService.getUser(newOwnerUsername);
+            resub.setOwner(newOwner);
         }
 
-        resub.setDescription(editResub.getDescription());
+        if (editResub.getDescription() != null) {
+            resub.setDescription(
+                    editResub.getDescription().isEmpty() ? null : editResub.getDescription().get());
+        }
+
         resub.setEdited(LocalDateTime.now());
         return repository.save(resub);
     }

@@ -2,7 +2,7 @@ package me.kverna.spring.repost.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.CreateResub;
@@ -10,10 +10,11 @@ import me.kverna.spring.repost.data.EditResub;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
+import me.kverna.spring.repost.security.AuthorizeUser;
 import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.PostService;
 import me.kverna.spring.repost.service.ResubService;
-import me.kverna.spring.repost.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,89 +34,109 @@ public class ResubController {
 
     private ResubService service;
     private PostService postService;
-    private UserService userService;
 
-    public ResubController(ResubService service, PostService postService, UserService userService) {
+    public ResubController(ResubService service, PostService postService) {
         this.service = service;
         this.postService = postService;
-        this.userService = userService;
     }
 
-    @Operation(summary = "Get Resubs", description = "Get all resubs.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response")
-    })
+    @Operation(
+            summary = "Get Resubs", description = "Get all resubs.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response")
+            }
+    )
     @GetMapping(value = "/", produces = {"application/json"})
     public List<Resub> getAllResubs() {
         return service.getAllResubs();
     }
 
-    @Operation(summary = "Get Resub", description = "Get a specific resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
+    @Operation(
+            summary = "Get Resub", description = "Get a specific resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            }
+    )
     @GetMapping(value = "/{resub}", produces = {"application/json"})
     public Resub getResub(@PathVariable String resub) {
         return service.getResub(resub);
     }
 
-    @Operation(summary = "Create Resub", description = "Create a new resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
-    })
+    @Operation(
+            summary = "Create Resub", description = "Create a new resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @AuthorizeUser
     @PostMapping(value = "/", consumes = {"application/json"}, produces = {"application/json"})
-    public Resub createResub(@RequestBody CreateResub createResub) {
-        User owner = userService.getUser("aa");
-        return service.createResub(createResub, owner);
+    public Resub createResub(@RequestBody CreateResub createResub, @CurrentUser User user) {
+        return service.createResub(createResub, user);
     }
 
-    @Operation(summary = "Delete Resub", description = "Delete a resub." +
-            "\nOnly the owner of a resub can delete the resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
+    @Operation(
+            summary = "Delete Resub", description = "Delete a resub." +
+            "Only the owner of a resub can delete the resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    @AuthorizeUser
     @DeleteMapping(value = "/{resub}")
     public void deleteResub(@PathVariable String resub, @CurrentUser User user) {
         service.deleteResub(service.getResub(resub), user);
     }
 
-    @Operation(summary = "Edit Resub", description = "Edit a resub." +
-            "\nOnly the owner of a resub can edit the resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
+    @Operation(
+            summary = "Edit Resub", description = "Edit a resub." +
+            "Only the owner of a resub can edit the resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    @AuthorizeUser
     @PatchMapping(value = "/{resub}", consumes = {"application/patch+json"}, produces = {"application/json"})
-    public Resub editResub(@RequestBody EditResub editResub, @PathVariable String resub, @CurrentUser User user) {
+    public Resub editResub(@PathVariable String resub, @RequestBody EditResub editResub, @CurrentUser User user) {
         return service.editResub(editResub, service.getResub(resub), user);
     }
 
-    @Operation(summary = "Create Post In Resub", description = "Create new post in a resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
+    @Operation(
+            summary = "Create Post In Resub", description = "Create new post in a resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            },
+            security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @AuthorizeUser
     @PostMapping(value = "/{resub}/posts", produces = {"application/json"}, consumes = {"application/json"})
-    public Post createPostInResub(@RequestBody CreatePost createPost, @PathVariable String resub) {
-        User author = userService.getUser("aa");
-        return postService.createPost(createPost, service.getResub(resub), author);
+    public Post createPostInResub(@PathVariable String resub, @RequestBody CreatePost createPost, @CurrentUser User user) {
+        return postService.createPost(createPost, service.getResub(resub), user);
     }
 
-    @Operation(summary = "Get Posts In Resub", description = "Get all posts in a resub.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful Response"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
+    @Operation(
+            summary = "Get Posts In Resub", description = "Get all posts in a resub.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            }
+    )
     @GetMapping(value = "/{resub}/posts", produces = {"application/json"})
     public List<Post> getPostsInResub(@PathVariable String resub) {
         return postService.getAllPostsByParentResub(service.getResub(resub));

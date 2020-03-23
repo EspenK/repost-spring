@@ -1,14 +1,16 @@
 package me.kverna.spring.repost.data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class EditUser {
-    private String bio;
+    private Optional<String> bio;
 
     @JsonProperty(value = "avatar_url")
-    private String avatarUrl;
+    private Optional<String> avatarUrl;
 }

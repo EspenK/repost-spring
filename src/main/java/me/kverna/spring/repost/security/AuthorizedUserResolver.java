@@ -36,7 +36,6 @@ public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
             return null;
         }
 
-        System.out.println(authentication);
         return userService.getUser(authentication.getName());
     }
 }
