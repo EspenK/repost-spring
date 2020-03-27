@@ -1,12 +1,16 @@
 package me.kverna.spring.repost.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import me.kverna.spring.repost.data.Comment;
 import me.kverna.spring.repost.data.CreateComment;
 import me.kverna.spring.repost.data.EditPost;
+import me.kverna.spring.repost.data.ErrorResponse;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.security.AuthorizeUser;
@@ -43,7 +47,7 @@ public class PostController {
             summary = "Get Post", description = "Get a specific post.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{postId}", produces = {"application/json"})
@@ -55,16 +59,16 @@ public class PostController {
             summary = "Edit Post", description = "Edit a post.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @AuthorizeUser
     @PatchMapping(value = "/{postId}", consumes = {"application/patch+json"}, produces = {"application/json"})
-    public Post editPost(@PathVariable int postId, @RequestBody EditPost editPost, @CurrentUser User user) {
+    public Post editPost(@PathVariable int postId, @RequestBody @Valid EditPost editPost, @CurrentUser User user) {
         return service.editPost(editPost, service.getPost(postId), user);
     }
 
@@ -73,10 +77,10 @@ public class PostController {
             "Only the author of the post or the owner of the parent resub can delete the post.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
 
@@ -91,9 +95,9 @@ public class PostController {
             summary = "Create Comment In Post", description = "Create a comment in a post.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -109,7 +113,7 @@ public class PostController {
             summary = "Get Comments In Post", description = "Get all comments in post.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{postId}/comments", produces = {"application/json"})

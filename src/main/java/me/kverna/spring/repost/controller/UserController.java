@@ -1,12 +1,15 @@
 package me.kverna.spring.repost.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.Comment;
 import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.EditUser;
+import me.kverna.spring.repost.data.ErrorResponse;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -62,8 +65,8 @@ public class UserController {
             summary = "Get Current User", description = "Get the authorized user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -77,8 +80,8 @@ public class UserController {
             summary = "Edit Current User", description = "Edit the currently authorized user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -92,8 +95,8 @@ public class UserController {
             summary = "Delete Current User", description = "Delete the currently authorized user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -107,7 +110,7 @@ public class UserController {
             summary = "Get User", description = "Get a specific user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{username}", produces = {"application/json"})
@@ -119,7 +122,7 @@ public class UserController {
             summary = "Get Resubs Owned By User", description = "Get all resubs owned by specific user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{username}/resubs", produces = {"application/json"})
@@ -132,7 +135,7 @@ public class UserController {
             summary = "Get Posts Owned By User", description = "Get all posts owned by specific user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{username}/posts", produces = {"application/json"})
@@ -145,7 +148,7 @@ public class UserController {
             summary = "Get Comments By User", description = "Get all comments owned by specific user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{username}/comments", produces = {"application/json"})

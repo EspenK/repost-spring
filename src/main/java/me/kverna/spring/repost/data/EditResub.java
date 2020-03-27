@@ -1,6 +1,5 @@
 package me.kverna.spring.repost.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import lombok.Data;

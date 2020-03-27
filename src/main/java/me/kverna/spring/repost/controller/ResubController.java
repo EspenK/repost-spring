@@ -1,12 +1,15 @@
 package me.kverna.spring.repost.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
+import me.kverna.spring.repost.data.ErrorResponse;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
@@ -55,7 +58,7 @@ public class ResubController {
             summary = "Get Resub", description = "Get a specific resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{resub}", produces = {"application/json"})
@@ -67,8 +70,8 @@ public class ResubController {
             summary = "Create Resub", description = "Create a new resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -84,10 +87,10 @@ public class ResubController {
             "Only the owner of a resub can delete the resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -102,10 +105,10 @@ public class ResubController {
             "Only the owner of a resub can edit the resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -119,7 +122,7 @@ public class ResubController {
             summary = "Create Post In Resub", description = "Create new post in a resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
@@ -134,7 +137,7 @@ public class ResubController {
             summary = "Get Posts In Resub", description = "Get all posts in a resub.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     @GetMapping(value = "/{resub}/posts", produces = {"application/json"})

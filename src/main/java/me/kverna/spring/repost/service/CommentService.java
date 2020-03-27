@@ -76,9 +76,11 @@ public class CommentService {
                     "You are not the author of this comment");
         }
 
-        if (editComment.getContent() != null) {
-            comment.setContent(editComment.getContent());
+        if (editComment.getContent() == null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Failed to validate field title: can't be null");
         }
+        comment.setContent(editComment.getContent());
         comment.setEdited(LocalDateTime.now());
 
         return repository.save(comment);
