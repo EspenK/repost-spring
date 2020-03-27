@@ -2,9 +2,8 @@ package me.kverna.spring.repost.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.time.LocalDateTime;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,14 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.Set;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Table(name = "posts")
 @Entity
 @NoArgsConstructor
 public class Post {
+
     @Id
     @GeneratedValue
     private int id;
