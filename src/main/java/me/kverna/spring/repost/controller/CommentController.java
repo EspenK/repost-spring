@@ -19,6 +19,7 @@ import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.CommentService;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/comments")
+@Validated
 @Tag(name = "comments")
 public class CommentController {
 
@@ -73,7 +75,7 @@ public class CommentController {
     )
     @AuthorizeUser
     @PatchMapping(value = "/{commentId}", consumes = {"application/patch+json"}, produces = {"application/json"})
-    public Comment editComment(@PathVariable int commentId, EditComment editComment, @CurrentUser User user) {
+    public Comment editComment(@PathVariable int commentId, @RequestBody EditComment editComment, @CurrentUser User user) {
         return service.editComment(editComment, service.getComment(commentId), user);
     }
 

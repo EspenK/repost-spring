@@ -73,7 +73,7 @@ public class PostController {
     )
     @AuthorizeUser
     @PatchMapping(value = "/{postId}", consumes = {"application/patch+json"}, produces = {"application/json"})
-    public Post editPost(@PathVariable int postId, @RequestBody @Valid EditPost editPost, @CurrentUser User user) {
+    public Post editPost(@PathVariable int postId, @RequestBody EditPost editPost, @CurrentUser User user) {
         return service.editPost(editPost, service.getPost(postId), user);
     }
 

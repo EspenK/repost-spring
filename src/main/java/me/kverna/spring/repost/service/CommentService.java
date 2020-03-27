@@ -82,7 +82,7 @@ public class CommentService {
 
         if (editComment.getContent() == null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Failed to validate field title: can't be null");
+                    "Failed to validate field content: can't be null");
         }
         comment.setContent(editComment.getContent());
         comment.setEdited(LocalDateTime.now());
