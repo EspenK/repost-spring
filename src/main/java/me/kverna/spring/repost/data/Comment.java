@@ -73,7 +73,7 @@ public class Comment {
      * @return true if the user is allowed to delete the comment.
      */
     public boolean isUserAllowedToDelete(User user) {
-        return parentPost.getAuthor() == user || author == user;
+        return parentResub.getOwner() == user || author == user;
     }
 
     /**
