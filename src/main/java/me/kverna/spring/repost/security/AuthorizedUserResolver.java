@@ -4,6 +4,7 @@ import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
@@ -36,6 +38,10 @@ public class AuthorizedUserResolver implements HandlerMethodArgumentResolver {
             return null;
         }
 
-        return userService.getUser(authentication.getName());
+        try {
+            return userService.getUser(authentication.getName());
+        } catch (ResponseStatusException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getReason());
+        }
     }
 }

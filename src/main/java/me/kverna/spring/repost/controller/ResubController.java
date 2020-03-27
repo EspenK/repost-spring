@@ -86,7 +86,7 @@ public class ResubController {
             summary = "Delete Resub", description = "Delete a resub." +
             "Only the owner of a resub can delete the resub.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "204", description = "Successful Response"),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -95,6 +95,7 @@ public class ResubController {
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @AuthorizeUser
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{resub}")
     public void deleteResub(@PathVariable String resub, @CurrentUser User user) {
         service.deleteResub(service.getResub(resub), user);
