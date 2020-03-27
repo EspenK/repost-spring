@@ -1,5 +1,6 @@
 package me.kverna.spring.repost;
 
+import javax.validation.ConstraintViolationException;
 import me.kverna.spring.repost.data.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,11 +33,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
-    @ExceptionHandler({ResponseStatusException.class})
-    public ResponseEntity<Object> handleExceptions(Exception ex) {
-        ResponseStatusException statusEx = (ResponseStatusException) ex;
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Object> handleResponseStatusExceptions(ResponseStatusException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getReason());
+        return new ResponseEntity<>(response, ex.getResponseHeaders(), ex.getStatus());
+    }
 
-        ErrorResponse response = new ErrorResponse(statusEx.getReason());
-        return new ResponseEntity<>(response, statusEx.getResponseHeaders(), statusEx.getStatus());
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleExceptions(ConstraintViolationException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

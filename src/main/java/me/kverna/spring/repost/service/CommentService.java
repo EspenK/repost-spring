@@ -1,12 +1,14 @@
 package me.kverna.spring.repost.service;
 
 import me.kverna.spring.repost.data.Comment;
+import me.kverna.spring.repost.data.CommentVote;
 import me.kverna.spring.repost.data.CreateComment;
 import me.kverna.spring.repost.data.EditComment;
 import me.kverna.spring.repost.data.Post;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.CommentRepository;
+import me.kverna.spring.repost.repository.CommentVoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,12 @@ import java.util.Optional;
 public class CommentService {
 
     private CommentRepository repository;
+    private CommentVoteRepository voteRepository;
 
     @Autowired
-    public CommentService(CommentRepository repository) {
+    public CommentService(CommentRepository repository, CommentVoteRepository voteRepository) {
         this.repository = repository;
+        this.voteRepository = voteRepository;
     }
 
     /**
@@ -78,7 +82,7 @@ public class CommentService {
 
         if (editComment.getContent() == null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Failed to validate field title: can't be null");
+                    "Failed to validate field content: can't be null");
         }
         comment.setContent(editComment.getContent());
         comment.setEdited(LocalDateTime.now());
@@ -99,6 +103,12 @@ public class CommentService {
         }
 
         repository.delete(comment);
+    }
+
+    public Comment voteComment(Comment comment, User author, int vote) {
+        CommentVote commentVote = new CommentVote(comment, author, vote);
+        voteRepository.save(commentVote);
+        return getComment(comment.getId());
     }
 
     /**
