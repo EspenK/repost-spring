@@ -3,7 +3,10 @@ package me.kverna.spring.repost.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,8 +44,17 @@ public class Post {
     private Resub parentResub;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPost")
+    @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
     private Set<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<PostVote> votes = new ArrayList<>();
+
+    @JsonProperty(value = "votes")
+    public int sumVotes() {
+        return votes.stream().mapToInt(PostVote::getVote).reduce(0, Integer::sum);
+    }
 
     @JsonProperty(value = "parent_resub_name", access = JsonProperty.Access.READ_ONLY)
     public String getParentResubName() {

@@ -17,6 +17,7 @@ import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.security.AuthorizeUser;
 import me.kverna.spring.repost.security.CurrentUser;
 import me.kverna.spring.repost.service.CommentService;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -96,7 +97,7 @@ public class CommentController {
     }
 
     @Operation(
-            summary = "Vote Comment", description = "Vote on a comment in a post",
+            summary = "Vote Comment", description = "Vote on a comment in a post.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful Response"),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -107,7 +108,7 @@ public class CommentController {
     )
     @AuthorizeUser
     @PatchMapping(value = "/{commentId}/vote/{vote}", produces = {"application/json"})
-    public Comment voteComment(@PathVariable int commentId, @PathVariable @Min(-1) @Max(1) int vote, @CurrentUser User user) {
+    public Comment voteComment(@PathVariable int commentId, @PathVariable @Range(min = -1, max = 1) int vote, @CurrentUser User user) {
         return service.voteComment(service.getComment(commentId), user, vote);
     }
 }

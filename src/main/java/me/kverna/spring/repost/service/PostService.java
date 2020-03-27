@@ -3,9 +3,11 @@ package me.kverna.spring.repost.service;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.EditPost;
 import me.kverna.spring.repost.data.Post;
+import me.kverna.spring.repost.data.PostVote;
 import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.PostRepository;
+import me.kverna.spring.repost.repository.PostVoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,12 @@ import java.util.Optional;
 public class PostService {
 
     private PostRepository repository;
+    private PostVoteRepository voteRepository;
 
     @Autowired
-    public PostService(PostRepository repository) {
+    public PostService(PostRepository repository, PostVoteRepository voteRepository) {
         this.repository = repository;
+        this.voteRepository = voteRepository;
     }
 
     /**
@@ -125,5 +129,11 @@ public class PostService {
         }
 
         repository.delete(post);
+    }
+
+    public Post votePost(Post post, User author, int vote) {
+        PostVote postVote = new PostVote(post, author, vote);
+        voteRepository.save(postVote);
+        return getPost(post.getId());
     }
 }

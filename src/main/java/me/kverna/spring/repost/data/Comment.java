@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -41,7 +42,7 @@ public class Comment {
     private Post parentPost;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "id.comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "id.comment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CommentVote> votes = new ArrayList<>();
 
     @JsonProperty(value = "votes")
