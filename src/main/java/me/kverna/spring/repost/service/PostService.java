@@ -96,7 +96,8 @@ public class PostService {
 
         if (editPost.getTitle() != null) {
             if (editPost.getTitle().isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Post title can't be null");
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Failed to validate field title: can't be null");
             }
             post.setTitle(editPost.getTitle().get());
         }
