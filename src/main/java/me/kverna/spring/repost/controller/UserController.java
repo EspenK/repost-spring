@@ -94,13 +94,14 @@ public class UserController {
     @Operation(
             summary = "Delete Current User", description = "Delete the currently authorized user.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "204", description = "Successful Response"),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             },
             security = @SecurityRequirement(name = "OAuth2PasswordBearer", scopes = "user")
     )
     @AuthorizeUser
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/me", produces = {"application/json"})
     public void deleteCurrentUser(@CurrentUser User currentUser) {
         service.deleteUser(currentUser);

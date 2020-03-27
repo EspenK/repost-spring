@@ -83,7 +83,7 @@ public class CommentController {
             summary = "Delete Comment", description = "Delete a specific comment. " +
             "Only the author of the comment or the owner of the parent resub can delete the comment.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "204", description = "Successful Response"),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -93,7 +93,8 @@ public class CommentController {
 
     )
     @AuthorizeUser
-    @DeleteMapping("/")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(value = "/{commentId}")
     public void deleteComment(@PathVariable int commentId, @CurrentUser User user) {
         service.deleteComment(service.getComment(commentId), user);
     }

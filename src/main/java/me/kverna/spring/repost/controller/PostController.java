@@ -81,7 +81,7 @@ public class PostController {
             summary = "Delete Post", description = "Delete a specific post. " +
             "Only the author of the post or the owner of the parent resub can delete the post.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful Response"),
+                    @ApiResponse(responseCode = "204", description = "Successful Response"),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -91,7 +91,8 @@ public class PostController {
 
     )
     @AuthorizeUser
-    @DeleteMapping("/")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(value = "/{postId}")
     public void deletePost(@PathVariable int postId, @CurrentUser User user) {
         service.deletePost(service.getPost(postId), user);
     }
