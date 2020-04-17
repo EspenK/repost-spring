@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
     @Autowired
     public ResourceServerConfiguration(JwtAccessTokenConverter jwtAccessTokenConverter) {
@@ -28,6 +28,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
