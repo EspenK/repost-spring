@@ -1,5 +1,6 @@
 package me.kverna.spring.repost.security;
 
+import me.kverna.spring.repost.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +21,16 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final Config config;
 
     @Autowired
-    public AuthorizationServerConfiguration(JwtAccessTokenConverter jwtAccessTokenConverter, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthorizationServerConfiguration(JwtAccessTokenConverter jwtAccessTokenConverter,
+            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+            Config config) {
         this.jwtAccessTokenConverter = jwtAccessTokenConverter;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.config = config;
     }
 
     @Override
@@ -41,7 +46,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
-                .withClient("repost")
+                .withClient(config.getClientId())
                 .secret(null)
                 .authorizedGrantTypes("password")
                 .scopes("user");
