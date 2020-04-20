@@ -1,6 +1,9 @@
 package me.kverna.spring.repost.security;
 
 import java.util.Arrays;
+import me.kverna.spring.repost.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +25,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final RepostUserDetailsService userDetailsService;
     private final UserDetailsAuthenticationProvider userDetailsAuthenticationProvider;
+    private final Config config;
+    private final Logger logger;
 
     @Autowired
-    public WebSecurityConfig(RepostUserDetailsService userDetailsService, UserDetailsAuthenticationProvider userDetailsAuthenticationProvider) {
+    public WebSecurityConfig(RepostUserDetailsService userDetailsService,
+            UserDetailsAuthenticationProvider userDetailsAuthenticationProvider, Config config) {
         this.userDetailsService = userDetailsService;
         this.userDetailsAuthenticationProvider = userDetailsAuthenticationProvider;
+        this.config = config;
+        this.logger = LoggerFactory.getLogger(WebSecurityConfig.class);
     }
 
     @Override
@@ -68,8 +76,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        // TODO: implement random key generation
+        String signingKey = config.getSigningKey();
+        if (signingKey == null) {
+            logger.error("Could not find a signing key in the application properties. "
+                    + "Please provide a signing key with the repost.signing-key property.");
+            signingKey = "unsafe_signing_key_which_should_not_be_used";
+        }
+
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setSigningKey("SUPeR_SEcRET_SiGNiNG_kEY");  // TODO: set signing key in properties file
+        jwtAccessTokenConverter.setSigningKey(signingKey);
         return jwtAccessTokenConverter;
     }
 }
