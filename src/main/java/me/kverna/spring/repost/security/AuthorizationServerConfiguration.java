@@ -41,14 +41,17 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
-                .withClient("client")
-                .secret(passwordEncoder.encode("secret"))
+                .withClient("repost")
+                .secret(null)
                 .authorizedGrantTypes("password")
                 .scopes("user");
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security
+                .passwordEncoder(passwordEncoder)
+                .allowFormAuthenticationForClients();
         security.addTokenEndpointAuthenticationFilter(
                 new CorsFilter(WebSecurityConfig.corsConfigurationSource()));
     }
