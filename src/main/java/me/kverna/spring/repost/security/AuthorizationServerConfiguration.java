@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -22,19 +23,21 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final Config config;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Autowired
     public AuthorizationServerConfiguration(JwtAccessTokenConverter jwtAccessTokenConverter,
             PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-            Config config) {
+            Config config, CorsConfigurationSource corsConfigurationSource) {
         this.jwtAccessTokenConverter = jwtAccessTokenConverter;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.config = config;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
                 .pathMapping("/oauth/token", "/api/auth/token")
                 .tokenStore(new JwtTokenStore(jwtAccessTokenConverter))
@@ -53,11 +56,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         security
                 .passwordEncoder(passwordEncoder)
                 .allowFormAuthenticationForClients();
         security.addTokenEndpointAuthenticationFilter(
-                new CorsFilter(WebSecurityConfig.corsConfigurationSource()));
+                new CorsFilter(corsConfigurationSource));
     }
 }

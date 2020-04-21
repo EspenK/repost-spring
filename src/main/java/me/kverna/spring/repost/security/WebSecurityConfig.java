@@ -1,6 +1,5 @@
 package me.kverna.spring.repost.security;
 
-import java.util.Arrays;
 import me.kverna.spring.repost.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +43,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public static CorsConfigurationSource corsConfigurationSource() {
-        String[] origins = {
-                "http://localhost",
-                "http://localhost:8080"
-        };
-
+    public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.applyPermitDefaultValues();
-        configuration.setAllowedOrigins(Arrays.asList(origins));
+        configuration.setAllowedOrigins(config.getOrigins());
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
