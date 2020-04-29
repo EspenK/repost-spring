@@ -8,6 +8,7 @@ import me.kverna.spring.repost.data.Resub;
 import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.ResubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,8 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ResubService {
 
-    private ResubRepository repository;
-    private UserService userService;
+    private final ResubRepository repository;
+    private final UserService userService;
 
     @Autowired
     public ResubService(ResubRepository repository, UserService userService) {
@@ -29,8 +30,8 @@ public class ResubService {
      *
      * @return a list of all resubs.
      */
-    public List<Resub> getAllResubs() {
-        return repository.findAll();
+    public List<Resub> getResubs(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size)).toList();
     }
 
     /**

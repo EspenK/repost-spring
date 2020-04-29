@@ -1,5 +1,8 @@
 package me.kverna.spring.repost.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.EditPost;
 import me.kverna.spring.repost.data.Post;
@@ -9,19 +12,16 @@ import me.kverna.spring.repost.data.User;
 import me.kverna.spring.repost.repository.PostRepository;
 import me.kverna.spring.repost.repository.PostVoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class PostService {
 
-    private PostRepository repository;
-    private PostVoteRepository voteRepository;
+    private final PostRepository repository;
+    private final PostVoteRepository voteRepository;
 
     @Autowired
     public PostService(PostRepository repository, PostVoteRepository voteRepository) {
@@ -35,8 +35,8 @@ public class PostService {
      * @param resub the resub.
      * @return a list of all posts in the resub.
      */
-    public List<Post> getAllPostsByParentResub(Resub resub) {
-        return repository.findAllByParentResub(resub);
+    public List<Post> getAllPostsByParentResub(Resub resub, int page, int size) {
+        return repository.findAllByParentResub(resub, PageRequest.of(page, size));
     }
 
     /**

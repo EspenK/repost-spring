@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import me.kverna.spring.repost.data.CreatePost;
 import me.kverna.spring.repost.data.CreateResub;
 import me.kverna.spring.repost.data.EditResub;
@@ -25,18 +26,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/resubs")
 @Tag(name = "resubs")
 public class ResubController {
 
-    private ResubService service;
-    private PostService postService;
+    private final ResubService service;
+    private final PostService postService;
 
     public ResubController(ResubService service, PostService postService) {
         this.service = service;
@@ -50,8 +50,9 @@ public class ResubController {
             }
     )
     @GetMapping(value = "/", produces = {"application/json"})
-    public List<Resub> getAllResubs() {
-        return service.getAllResubs();
+    public List<Resub> getAllResubs(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size) {
+        return service.getResubs(page, size);
     }
 
     @Operation(
@@ -142,7 +143,9 @@ public class ResubController {
             }
     )
     @GetMapping(value = "/{resub}/posts", produces = {"application/json"})
-    public List<Post> getPostsInResub(@PathVariable String resub) {
-        return postService.getAllPostsByParentResub(service.getResub(resub));
+    public List<Post> getPostsInResub(@PathVariable String resub,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size) {
+        return postService.getAllPostsByParentResub(service.getResub(resub), page, size);
     }
 }
