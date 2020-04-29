@@ -6,9 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import java.util.List;
 import me.kverna.spring.repost.data.Comment;
 import me.kverna.spring.repost.data.CreateComment;
 import me.kverna.spring.repost.data.EditPost;
@@ -29,10 +27,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -40,8 +37,8 @@ import java.util.List;
 @Tag(name = "posts")
 public class PostController {
 
-    private PostService service;
-    private CommentService commentService;
+    private final PostService service;
+    private final CommentService commentService;
 
     public PostController(PostService service, CommentService commentService) {
         this.service = service;
@@ -109,7 +106,8 @@ public class PostController {
     )
     @AuthorizeUser
     @PatchMapping(value = "/{postId}/vote/{vote}", produces = {"application/json"})
-    public Post voteComment(@PathVariable int postId, @PathVariable @Range(min = -1, max = 1) int vote, @CurrentUser User user) {
+    public Post votePost(@PathVariable int postId, @PathVariable @Range(min = -1, max = 1) int vote,
+            @CurrentUser User user) {
         return service.votePost(service.getPost(postId), user, vote);
     }
 
@@ -139,7 +137,9 @@ public class PostController {
             }
     )
     @GetMapping(value = "/{postId}/comments", produces = {"application/json"})
-    public List<Comment> getAllCommentsInPost(@PathVariable int postId) {
-        return commentService.getAllCommentsByPost(service.getPost(postId));
+    public List<Comment> getAllCommentsInPost(@PathVariable int postId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
+        return commentService.getAllCommentsByPost(service.getPost(postId), page, pageSize);
     }
 }
