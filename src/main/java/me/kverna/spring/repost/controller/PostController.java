@@ -139,7 +139,7 @@ public class PostController {
     @GetMapping(value = "/{postId}/comments", produces = {"application/json"})
     public List<Comment> getAllCommentsInPost(@PathVariable int postId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "100") int size) {
-        return commentService.getAllCommentsByPost(service.getPost(postId), page, size);
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
+        return commentService.getAllCommentsByPost(service.getPost(postId), page, pageSize);
     }
 }

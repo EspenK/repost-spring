@@ -50,9 +50,9 @@ public class ResubController {
             }
     )
     @GetMapping(value = "/", produces = {"application/json"})
-    public List<Resub> getAllResubs(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "100") int size) {
-        return service.getResubs(page, size);
+    public List<Resub> getResubs(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
+        return service.getResubs(page, pageSize);
     }
 
     @Operation(
@@ -145,7 +145,7 @@ public class ResubController {
     @GetMapping(value = "/{resub}/posts", produces = {"application/json"})
     public List<Post> getPostsInResub(@PathVariable String resub,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "100") int size) {
-        return postService.getAllPostsByParentResub(service.getResub(resub), page, size);
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
+        return postService.getAllPostsByParentResub(service.getResub(resub), page, pageSize);
     }
 }

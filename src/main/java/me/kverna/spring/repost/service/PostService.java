@@ -35,8 +35,8 @@ public class PostService {
      * @param resub the resub.
      * @return a list of all posts in the resub.
      */
-    public List<Post> getAllPostsByParentResub(Resub resub, int page, int size) {
-        return repository.findAllByParentResub(resub, PageRequest.of(page, size));
+    public List<Post> getAllPostsByParentResub(Resub resub, int page, int pageSize) {
+        return repository.findAllByParentResub(resub, PageRequest.of(page, pageSize));
     }
 
     /**
@@ -45,8 +45,8 @@ public class PostService {
      * @param author the user.
      * @return a list of all posts by the user.
      */
-    public List<Post> getAllPostsByAuthor(User author) {
-        return repository.findAllByAuthor(author);
+    public List<Post> getAllPostsByAuthor(User author, int page, int pageSize) {
+        return repository.findAllByAuthor(author, PageRequest.of(page, pageSize));
     }
 
     /**

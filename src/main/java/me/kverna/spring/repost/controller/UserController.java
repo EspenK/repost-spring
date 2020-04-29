@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import me.kverna.spring.repost.data.Comment;
 import me.kverna.spring.repost.data.CreateUser;
 import me.kverna.spring.repost.data.EditUser;
@@ -27,22 +28,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "users")
 public class UserController {
 
-    private UserService service;
-    private ResubService resubService;
-    private PostService postService;
-    private CommentService commentService;
+    private final UserService service;
+    private final ResubService resubService;
+    private final PostService postService;
+    private final CommentService commentService;
 
-    public UserController(UserService service, ResubService resubService, PostService postService, CommentService commentService) {
+    public UserController(UserService service, ResubService resubService, PostService postService,
+            CommentService commentService) {
         this.service = service;
         this.resubService = resubService;
         this.postService = postService;
@@ -127,9 +128,11 @@ public class UserController {
             }
     )
     @GetMapping(value = "/{username}/resubs", produces = {"application/json"})
-    public List<Resub> getResubsByUser(@PathVariable String username) {
+    public List<Resub> getResubsByUser(@PathVariable String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
         User owner = service.getUser(username);
-        return resubService.getAllResubsByOwner(owner);
+        return resubService.getAllResubsByOwner(owner, page, pageSize);
     }
 
     @Operation(
@@ -140,9 +143,11 @@ public class UserController {
             }
     )
     @GetMapping(value = "/{username}/posts", produces = {"application/json"})
-    public List<Post> getPostsByUser(@PathVariable String username) {
+    public List<Post> getPostsByUser(@PathVariable String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
         User author = service.getUser(username);
-        return postService.getAllPostsByAuthor(author);
+        return postService.getAllPostsByAuthor(author, page, pageSize);
     }
 
     @Operation(
@@ -153,8 +158,10 @@ public class UserController {
             }
     )
     @GetMapping(value = "/{username}/comments", produces = {"application/json"})
-    public List<Comment> getCommentsByUser(@PathVariable String username) {
+    public List<Comment> getCommentsByUser(@PathVariable String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "page_size", defaultValue = "100") int pageSize) {
         User author = service.getUser(username);
-        return commentService.getAllCommentsByAuthor(author);
+        return commentService.getAllCommentsByAuthor(author, page, pageSize);
     }
 }

@@ -117,8 +117,8 @@ public class CommentService {
      * @param post the post.
      * @return a list of all comments in the post.
      */
-    public List<Comment> getAllCommentsByPost(Post post, int page, int size) {
-        return repository.findAllByParentPost(post, PageRequest.of(page, size));
+    public List<Comment> getAllCommentsByPost(Post post, int page, int pageSize) {
+        return repository.findAllByParentPost(post, PageRequest.of(page, pageSize));
     }
 
     /**
@@ -127,17 +127,7 @@ public class CommentService {
      * @param author the user.
      * @return a list of all comments by the user.
      */
-    public List<Comment> getAllCommentsByAuthor(User author) {
-        return repository.findAllByAuthor(author);
-    }
-
-    /**
-     * Get all comments in a resub.
-     *
-     * @param resub the resub.
-     * @return a list of comments in the resub.
-     */
-    public List<Comment> getAllCommentsByResub(Resub resub) {
-        return repository.findAllByParentResub(resub);
+    public List<Comment> getAllCommentsByAuthor(User author, int page, int pageSize) {
+        return repository.findAllByAuthor(author, PageRequest.of(page, pageSize));
     }
 }
