@@ -15,7 +15,7 @@ git clone https://github.com/EspenK/repost-spring.git
 2. Navigate to the `repost-spring` directory. Make the `mvnw` file executable. This
 is an instanced version of the [Apache Maven](https://maven.apache.org/) build tool
 ```bash
-cd repost-fastapi
+cd repost-spring
 chmod +x mvnw
 ```
 
