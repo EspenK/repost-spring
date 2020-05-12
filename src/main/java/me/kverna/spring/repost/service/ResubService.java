@@ -31,7 +31,7 @@ public class ResubService {
      * @return a list of all resubs.
      */
     public List<Resub> getResubs(int page, int pageSize) {
-        return repository.findAll(PageRequest.of(page, pageSize)).toList();
+        return repository.findAllByOrderByCreatedDesc(PageRequest.of(page, pageSize));
     }
 
     /**
@@ -122,6 +122,6 @@ public class ResubService {
      * @return a list of all resubs owned by the user.
      */
     public List<Resub> getAllResubsByOwner(User owner, int page, int pageSize) {
-        return repository.findAllByOwner(owner, PageRequest.of(page, pageSize));
+        return repository.findAllByOwnerOrderByCreatedDesc(owner, PageRequest.of(page, pageSize));
     }
 }
