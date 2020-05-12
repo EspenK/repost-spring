@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    List<Comment> findAllByAuthor(User author, Pageable pageable);
+    List<Comment> findAllByAuthorOrderByCreatedDesc(User author, Pageable pageable);
 
-    List<Comment> findAllByParentPost(Post post, Pageable pageable);
+    List<Comment> findAllByParentPostOrderByCreatedDesc(Post post, Pageable pageable);
 }

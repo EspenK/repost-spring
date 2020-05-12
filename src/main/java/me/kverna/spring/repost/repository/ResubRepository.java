@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ResubRepository extends JpaRepository<Resub, Integer> {
+
     Resub findByName(String name);
 
-    List<Resub> findAllByOwner(User owner, Pageable pageable);
+    List<Resub> findAllByOrderByCreatedDesc(Pageable pageable);
+
+    List<Resub> findAllByOwnerOrderByCreatedDesc(User owner, Pageable pageable);
 }

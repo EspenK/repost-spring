@@ -118,7 +118,8 @@ public class CommentService {
      * @return a list of all comments in the post.
      */
     public List<Comment> getAllCommentsByPost(Post post, int page, int pageSize) {
-        return repository.findAllByParentPost(post, PageRequest.of(page, pageSize));
+        return repository
+                .findAllByParentPostOrderByCreatedDesc(post, PageRequest.of(page, pageSize));
     }
 
     /**
@@ -128,6 +129,6 @@ public class CommentService {
      * @return a list of all comments by the user.
      */
     public List<Comment> getAllCommentsByAuthor(User author, int page, int pageSize) {
-        return repository.findAllByAuthor(author, PageRequest.of(page, pageSize));
+        return repository.findAllByAuthorOrderByCreatedDesc(author, PageRequest.of(page, pageSize));
     }
 }
