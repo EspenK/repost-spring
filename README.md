@@ -7,26 +7,26 @@ A version of the Java JDK must be installed.
 project and is therefore recommended. Below are the steps for building and deploying
 the API. These instructions are only for a Linux build.
 
-1. Clone the repository:
+1. Clone the repository
 ```bash
 git clone https://github.com/EspenK/repost-spring.git
 ```
 
 2. Navigate to the `repost-spring` directory. Make the `mvnw` file executable. This
-is an instanced version of the [Apache Maven](https://maven.apache.org/) build tool.
+is an instanced version of the [Apache Maven](https://maven.apache.org/) build tool
 ```bash
 cd repost-spring
 chmod +x mvnw
 ```
 
 3. Package a JAR file using the Maven tool. This will also install the required
-dependencies.
+dependencies
 ```bash
 ./mvnw package
 ```
 
 4. Copy the default configuration file to the root folder. See 
-[Configurations](#configurations) for more information.
+[Configurations](#configurations) for more information
 ```bash
 cp src/main/resources/application.properties user.properties
 ```
@@ -62,3 +62,7 @@ below with an absolute path to your cloned project directory.
 ```bash
 java -jar target/repost-0.0.1-SNAPSHOT.jar --spring.config.location=file:///ROOT_PATH/user.properties
 ```
+
+## Documentation
+Documentation for the API is available after deployment at the `/api/swagger` and 
+`/api/docs` endpoints.
